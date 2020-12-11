@@ -96,7 +96,7 @@ async def on_message(message):
             if random.randint(0, 1):
                 msg += 'h'
 
-        if len(msg > 0):
+        if len(msg) > 0:
             await message.channel.send(msg)
 
 
