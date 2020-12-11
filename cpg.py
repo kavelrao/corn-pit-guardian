@@ -30,6 +30,24 @@ async def on_raw_reaction_add(payload):
         json.dump(reaction_map, file, indent=4)
 
 @client.event
+async def on_raw_reaction_remove(payload):
+    channel = await client.fetch_channel(payload.channel_id)
+    message = await channel.fetch_message(payload.message_id)
+    guild_id = str(payload.guild_id)
+    emoji = str(payload.emoji)
+
+    with open('reaction_map.json') as file:
+        reaction_map = json.load(file)
+    
+    author = message.author.display_name
+
+    if guild_id in reaction_map and emoji in reaction_map[guild_id] and author in reaction_map[guild_id][emoji]:
+        reaction_map[guild_id][emoji][author] -= 1
+    
+    with open('reaction_map.json') as file:
+        json.dump(reaction_map, file, indent=4)
+
+@client.event
 async def on_message(message):
     if message.author == client.user:
         return
@@ -68,8 +86,8 @@ async def on_message(message):
         await message.channel.send(msg)
 
     elif message.content == 'h':
-        msg = 'h'
-        await message.channel.send(msg)
+        await message.channel.send(message.content)
+
 
 token = ''
 with open('token.txt') as file:
