@@ -1,5 +1,6 @@
 import discord
 import json
+import random
 
 client = discord.Client()
 
@@ -86,7 +87,17 @@ async def on_message(message):
         await message.channel.send(msg)
 
     elif message.content == 'h':
-        await message.channel.send(message.content)
+        msg = ''
+        if random.randint(0, 1):
+            msg = 'h'
+
+        i = 0
+        while i < 10 and len(msg) == i + 1:
+            if random.randint(0, 1):
+                msg += 'h'
+
+        if len(msg > 0):
+            await message.channel.send(msg)
 
 
 token = ''
