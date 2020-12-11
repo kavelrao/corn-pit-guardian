@@ -68,7 +68,7 @@ async def on_message(message):
             top = sorted(reaction_map[guild_id][emoji], key=reaction_map[guild_id][emoji].get, reverse=True)[:5]
             topX = ''
             for i in range(len(top)):
-                topX += '\n    ' + str(i + 1) + '. ' + top[i] + ', with ' + reaction_map[guild_id][emoji][top[i]]
+                topX += '\n    ' + str(i + 1) + '. ' + top[i] + ', with ' + str(reaction_map[guild_id][emoji][top[i]])
 
             people = ''
             isAre = ''
