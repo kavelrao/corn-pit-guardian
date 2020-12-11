@@ -45,7 +45,7 @@ async def on_raw_reaction_remove(payload):
     if guild_id in reaction_map and emoji in reaction_map[guild_id] and author in reaction_map[guild_id][emoji]:
         reaction_map[guild_id][emoji][author] -= 1
     
-    with open('reaction_map.json') as file:
+    with open('reaction_map.json', 'w') as file:
         json.dump(reaction_map, file, indent=4)
 
 @client.event
