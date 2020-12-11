@@ -14,7 +14,7 @@ async def on_raw_reaction_add(payload):
     with open('reaction_map.json') as file:
         reaction_map = json.load(file)
 
-    author = message.author.display_name
+    author = message.author.name
 
     if guild_id not in reaction_map:
         reaction_map[guild_id] = {}
@@ -40,7 +40,7 @@ async def on_raw_reaction_remove(payload):
     with open('reaction_map.json') as file:
         reaction_map = json.load(file)
     
-    author = message.author.display_name
+    author = message.author.name
 
     if guild_id in reaction_map and emoji in reaction_map[guild_id] and author in reaction_map[guild_id][emoji]:
         if reaction_map[guild_id][emoji][author] > 0:
@@ -125,20 +125,88 @@ async def on_message(message):
         await message.channel.send(msg)
     
 
+    # gambling machine $$$$$$$$$$$$
     elif message.content == 'h':
-        msg = ''
-        if random.randint(0, 1):
-            msg = 'h'
+        with open('hstats.json') as file:
+            hstats = json.load(file)
+
+        guild_id = str(message.guild.id)
+        if guild_id not in hstats['gamblecount']:
+            hstats['gamblecount'][guild_id] = {}
+
+        # if the member hasn't gambled h's yet, we give 1 for free, so initialize at 0
+        if message.author.name not in hstats['gamblecount'][guild_id]:
+            hstats['gamblecount'][guild_id][message.author.name] = 0
+        else:
+            hstats['gamblecount'][guild_id][message.author.name] -= 1
 
         i = 0
-        while i < 10 and len(msg) == i + 1:
-            if random.randint(0, 1):
+        msg = ''
+        while i < 11 and len(msg) == i:
+            if random.random() <= 0.52:
                 msg += 'h'
-            
             i += 1
+        
+        if random.randint(0, 1000) == 1000:
+            msg += 'h' * 100
+        
+        hstats['gamblecount'][guild_id][message.author.name] += len(msg)
+
+        with open('hstats.json', 'w') as file:
+            json.dump(hstats, file, indent=4)
 
         if len(msg) > 0:
             await message.channel.send(msg)
+        
+    elif message.content == '#hcount':
+        with open('hstats.json') as file:
+            hstats = json.load(file)
+        
+        msg = ''
+        
+        guild_id = str(message.guild.id)
+
+        if guild_id not in hstats['gamblecount']:
+            msg = 'h-count has not been initialized for this server'
+        elif message.author.name not in hstats['gamblecount'][guild_id]:
+            msg = f'{message.author.mention}, you have not gambled any h\'s so far'
+        else:
+            msg = f'{message.author.mention}, you have {hstats["gamblecount"][guild_id][message.author.name]} h'
+            if abs(hstats['gamblecount'][guild_id][message.author.name]) != 1:
+                msg += '\'s'
+        
+        await message.channel.send(msg)
+    
+    elif message.content == '#hmax':
+        with open('hstats.json') as file:
+            hstats = json.load(file)
+        
+        msg = ''
+        guild_id = str(message.guild.id)
+
+        if guild_id not in hstats['gamblecount']:
+            msg = 'h-count has not been initialized for this server'
+        else:
+            winner = max(hstats['gamblecount'][guild_id], key=hstats['gamblecount'][guild_id].get)
+            msg = f'the current winner is {winner}, with {hstats["gamblecount"][guild_id][winner]} h\'s!'
+        
+        await message.channel.send(msg)
+    
+    elif message.content == '#hmin':
+        with open('hstats.json') as file:
+            hstats = json.load(file)
+        
+        msg = ''
+        guild_id = str(message.guild.id)
+        
+        if guild_id not in hstats['gamblecount']:
+            msg = 'h-count has not been initialized for this server'
+        else:
+            loser = min(hstats['gamblecount'][guild_id], key=hstats['gamblecount'][guild_id].get)
+            msg = f'the current loser is {loser}, with {hstats["gamblecount"][guild_id][loser]} h\'s!'
+        
+        await message.channel.send(msg)
+
 
 
 token = ''
