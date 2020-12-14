@@ -143,12 +143,12 @@ async def on_message(message):
         i = 0
         msg = ''
         while i < 10 and len(msg) == i:
-            if random.random() <= 0.52:
+            if random.random() <= 0.50:
                 msg += 'h'
             i += 1
         
         # JACKPOTS                   EXPECTED VALUE
-        if random.randint(0, 1000) == 1: #0.01
+        if random.randint(0, 1000) == 1: #0.05
             msg = 'h' * 50
         if random.randint(0, 25000) == 1: #0.004
             msg = 'h' * 100
