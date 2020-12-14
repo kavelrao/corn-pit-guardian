@@ -142,13 +142,22 @@ async def on_message(message):
 
         i = 0
         msg = ''
-        while i < 11 and len(msg) == i:
+        while i < 10 and len(msg) == i:
             if random.random() <= 0.52:
                 msg += 'h'
             i += 1
         
-        if random.randint(0, 1000) == 1000:
-            msg += 'h' * 100
+        # JACKPOTS                   EXPECTED VALUE
+        if random.randint(0, 1000) == 1: #0.01
+            msg = 'h' * 50
+        if random.randint(0, 25000) == 1: #0.004
+            msg = 'h' * 100
+        if random.randint(0, 500000) == 1: #0.0025
+            msg = 'h' * 250
+        if random.randint(0, 1000000) == 1: #0.001
+            msg = 'h' * 500
+        if random.randint(0, 100000000) == 1: #0.00002
+            msg = 'h' * 1000
         
         hstats['gamblecount'][guild_id][message.author.name] += len(msg)
 
@@ -192,7 +201,7 @@ async def on_message(message):
         
         await message.channel.send(msg)
     
-    elif message.content == '#hmin':
+    elif message.content == '#hlow':
         with open('hstats.json') as file:
             hstats = json.load(file)
         
