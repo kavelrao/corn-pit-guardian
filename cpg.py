@@ -231,6 +231,8 @@ async def on_message(message):
                         msg = f'{message.author.mention}, you have now spent {amount} h\'s - please show this message to an admin to claim your prize!'
                     else:
                         msg = f'{message.author.mention}, you don\'t have {amount} h\'s to spend'
+            else:
+                msg = 'The amount you spend must be a valid amount, see the h-gambling channel description for info.'
         
         with open('hstats.json', 'w') as file:
             json.dump(hstats, file, indent=4)
