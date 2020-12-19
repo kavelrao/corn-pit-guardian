@@ -196,23 +196,44 @@ async def on_message(message):
         if guild_id not in hstats['gamblecount']:
             msg = 'h-count has not been initialized for this server'
         else:
-            winner = max(hstats['gamblecount'][guild_id], key=hstats['gamblecount'][guild_id].get)
-            msg = f'the current winner is {winner}, with {hstats["gamblecount"][guild_id][winner]} h\'s!'
+            n = 5  # max number of members to display
+            top = sorted(hstats[guild_id], key=hstats[guild_id].get, reverse=True)[:n]
+            topX = ''
+            for i in range(len(top)):
+                topX += '\n    ' + str(i + 1) + '. ' + top[i] + ', with ' + str(hstats[guild_id][top[i]])
+            
+            msg = f'The h leaderboard: {topX}'
         
         await message.channel.send(msg)
     
-    elif message.content == '#hlow':
+    elif message.content.split(' ')[0] == '#hspend':
+        valid_amounts = [500, 1000, 2000, 2500, 5000, 10000]
         with open('hstats.json') as file:
             hstats = json.load(file)
         
         msg = ''
         guild_id = str(message.guild.id)
-        
-        if guild_id not in hstats['gamblecount']:
-            msg = 'h-count has not been initialized for this server'
+
+        stramount = message.content.split(' ')[1]
+        try:
+            amount = int(stramount)
+        except ValueError:
+            msg = f'{message.author.mention}, the argument after #hspend must be a number corresponding to one of the prize amounts'
         else:
-            loser = min(hstats['gamblecount'][guild_id], key=hstats['gamblecount'][guild_id].get)
-            msg = f'the current loser is {loser}, with {hstats["gamblecount"][guild_id][loser]} h\'s!'
+            if amount in valid_amounts:
+                if guild_id not in hstats['gamblecount']:
+                    msg = 'h-count has not been initialized for this server'
+                elif message.author.name not in hstats['gamblecount'][guild_id]:
+                    msg = f'{message.author.mention}, you have not gambled any h\'s so far'
+                else:
+                    if hstats['gamblecount'][guild_id][message.author.name] >= amount:
+                        hstats['gamblecount'][guild_id][message.author.name] -= amount
+                        msg = f'{message.author.mention}, you have now spent {amount} h\'s - please show this message to an admin to claim your prize!'
+                    else:
+                        msg = f'{message.author.mention}, you don\'t have {amount} h\'s to spend'
+        
+        with open('hstats.json', 'w') as file:
+            json.dump(hstats, file, indent=4)
         
         await message.channel.send(msg)
 
