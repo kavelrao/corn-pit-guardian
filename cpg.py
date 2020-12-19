@@ -197,10 +197,10 @@ async def on_message(message):
             msg = 'h-count has not been initialized for this server'
         else:
             n = 5  # max number of members to display
-            top = sorted(hstats[guild_id], key=hstats[guild_id].get, reverse=True)[:n]
+            top = sorted(hstats['gamblecount'][guild_id], key=hstats['gamblecount'][guild_id].get, reverse=True)[:n]
             topX = ''
             for i in range(len(top)):
-                topX += '\n    ' + str(i + 1) + '. ' + top[i] + ', with ' + str(hstats[guild_id][top[i]])
+                topX += '\n    ' + str(i + 1) + '. ' + top[i] + ', with ' + str(hstats['gamblecount'][guild_id][top[i]])
             
             msg = f'The h leaderboard: {topX}'
         
