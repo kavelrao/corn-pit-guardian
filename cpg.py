@@ -140,6 +140,10 @@ async def on_message(message):
         else:
             hstats['gamblecount'][guild_id][message.author.name] -= 1
 
+        # if in hs server, if not in h-gambling channel, no chance to return any h's
+        if guild_id == "702258603427495956" and str(message.channel.id) != "786810010830897193":
+            return
+
         i = 0
         msg = ''
         while i < 10 and len(msg) == i:
