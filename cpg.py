@@ -3,7 +3,6 @@ import json
 import random
 import requests
 import os
-from PIL import Image
 
 client = discord.Client()
 
@@ -246,7 +245,7 @@ async def on_message(message):
         
         await message.channel.send(msg)
     
-    elif message.content == '#frogme':
+    elif message.content.split(' ')[0] == '#frogme':
         random_string = str(random.randint(0, 5)) + str(random.randint(1, 4))  # add random number 00-54 for frog choice
         if not os.path.exists('frogs/' + random_string):
             print('generating new frog image')
