@@ -244,8 +244,11 @@ async def on_message(message):
             json.dump(hstats, file, indent=4)
         
         await message.channel.send(msg)
-    
-    elif message.content.split(' ')[0] == '#frogme' or message.content.split(' ')[0] == '#frogtime':
+
+    # Send random frog on request
+    with open('frogcommands.json') as file:
+        frogcommands = json.load(file)['commands']
+    elif any(command == message.content for command in frogcommands):
         random_string = str(random.randint(0, 5)) + str(random.randint(1, 4))  # add random number 01-54 for frog choice
         if not os.path.exists('frogs/' + random_string):
             print('generating new frog image')
