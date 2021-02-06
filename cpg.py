@@ -275,7 +275,7 @@ async def on_message(message):
         if message.author.name not in hstats['gamblecount'][guild_id]:
             hstats['gamblecount'][guild_id][message.author.name] = 0
         else:
-            hstats['gamblecount'][guild_id][message.author.name] = hstats['gamblecount'][guild_id][message.author.name] // 2
+            hstats['gamblecount'][guild_id][message.author.name] //= 2
 
         with open('hstats.json', 'w') as file:
             json.dump(hstats, file, indent=4)
