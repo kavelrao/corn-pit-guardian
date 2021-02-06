@@ -265,7 +265,8 @@ async def on_message(message):
     with open('badwords.txt') as file:
         for line in file:
             badwords.append(line.strip())
-    if any(word in message.content.split(' ') for word in badwords):
+    # check bad words only in hs server
+    if any(word in message.content.split(' ') for word in badwords) and str(message.guild.id) == "702258603427495956":
         with open('hstats.json') as file:
             hstats = json.load(file)
 
@@ -282,6 +283,8 @@ async def on_message(message):
 
         with open('hstats.json', 'w') as file:
             json.dump(hstats, file, indent=4)
+
+        await message.channel.send('swear jar')
 
 
 token = ''
