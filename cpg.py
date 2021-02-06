@@ -248,7 +248,7 @@ async def on_message(message):
     # Send random frog on request
     with open('frogcommands.json') as file:
         frogcommands = json.load(file)['commands']
-    elif any(command == message.content for command in frogcommands):
+    if any(command == message.content for command in frogcommands):
         random_string = str(random.randint(0, 5)) + str(random.randint(1, 4))  # add random number 01-54 for frog choice
         if not os.path.exists('frogs/' + random_string):
             print('generating new frog image')
