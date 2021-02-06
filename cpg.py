@@ -256,7 +256,29 @@ async def on_message(message):
                 file.write(response.content)
 
         await message.channel.send(file=discord.File('frogs/' + random_string + '.jpg'))
+    
+    # Half h count on bad words
+    badwords = []
+    with open('badwords.txt') as file:
+        for line in file:
+            badwords.append(line.strip())
+    if any(word in message.content.split(' ') for word in badwords):
+        with open('hstats.json') as file:
+            hstats = json.load(file)
 
+        guild_id = str(message.guild.id)
+        if guild_id not in hstats['gamblecount']:
+            hstats['gamblecount'][guild_id] = {}
+
+        # if the member hasn't gambled h's yet, we just set it at 0
+        # otherwise, half their h count
+        if message.author.name not in hstats['gamblecount'][guild_id]:
+            hstats['gamblecount'][guild_id][message.author.name] = 0
+        else:
+            hstats['gamblecount'][guild_id][message.author.name] = hstats['gamblecount'][guild_id][message.author.name] // 2
+
+        with open('hstats.json', 'w') as file:
+            json.dump(hstats, file, indent=4)
 
 
 token = ''
