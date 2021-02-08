@@ -266,7 +266,7 @@ async def on_message(message):
         for line in file:
             badwords.append(line.strip())
     # check bad words only in hs server
-    if any(word in message.content.split(' ') for word in badwords) and str(message.guild.id) == "702258603427495956" and message.attachments.size == 0:  # images do weird things, so don't trigger if attachments
+    if any(word in message.content.split(' ') for word in badwords) and str(message.guild.id) == "702258603427495956":
         with open('hstats.json') as file:
             hstats = json.load(file)
 
